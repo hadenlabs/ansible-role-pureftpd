@@ -1,0 +1,23 @@
+---
+# Used only for Debian/Ubuntu installation, as the -t option for apt.
+pureftpd_default_release: ''
+
+pure_ftpd_user: 'ftp'
+pure_ftpd_group: 'ftp'
+pure_ftpd_root: '/var/ftp'
+pure_ftpd_vusers:
+  - name: ftp
+    dir: '{{ pure_ftpd_root }}'
+    password: 'FTPisSoC00l?'
+pure_ftpd_tls: true
+pure_ftpd_allow_insecure: false
+pure_ftpd_openssl_config:
+  days: '365'
+  size: '2048'
+  country: ''
+  state: ''
+  locality: ''
+  org: ''
+  unit: ''
+  common: ''
+  email: ''
