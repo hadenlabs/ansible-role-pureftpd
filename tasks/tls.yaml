@@ -1,0 +1,41 @@
+---
+# assumes that `enable_tls: true`
+- name: Define TLS support level.
+  no_log: true
+  set_fact:
+    tls_level: 2
+  when: not pure_ftpd_allow_insecure
+
+- name: Define TLS support level.
+  no_log: true
+  set_fact:
+    tls_level: 1
+  when: pure_ftpd_allow_insecure
+
+- name: Set TLS config level ({{ tls_level | default(2) }})
+  copy: content={{ tls_level | default(2) }} dest={{ __ftp_conf_root }}/TLS owner=root group=root
+
+- name: Install configured TLS PEM for pure-ftpd
+  no_log: true
+  copy: content="{{ pure_ftpd_pem }}" dest=/etc/ssl/private/pure-ftpd.pem owner=root group=root
+  when: pure_ftpd_pem is defined
+
+- name: Check if pure-pw centificate file exists
+  stat: path=/etc/ssl/private/pure-ftpd.pem
+  register: r_ftppem
+
+- name: Generate TLS PEM for pure-ftpd
+  expect:
+    command: openssl req -x509 -nodes -days {{ pure_ftpd_openssl_config.days }} -newkey rsa:{{ pure_ftpd_openssl_config.size }} -keyout /etc/ssl/private/pure-ftpd.pem -out /etc/ssl/private/pure-ftpd.pem
+    responses:
+      (?i)country name: '{{ pure_ftpd_openssl_config.country }}'
+      (?i)state or province name: '{{ pure_ftpd_openssl_config.state }}'
+      (?i)locality name: '{{ pure_ftpd_openssl_config.locality }}'
+      (?i)organization name: '{{ pure_ftpd_openssl_config.org }}'
+      (?i)organizational unit name: '{{ pure_ftpd_openssl_config.unit }}'
+      (?i)common name: '{{ pure_ftpd_openssl_config.common }}'
+      (?i)email address: '{{ pure_ftpd_openssl_config.email }}'
+  when: pure_ftpd_pem is not defined and not r_ftppem.stat.exists
+
+- name: Restrict permissions on PEM
+  file: state=file path=/etc/ssl/private/pure-ftpd.pem mode=0600 owner=root group=root
