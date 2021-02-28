@@ -15,7 +15,7 @@
 - name: Set TLS config level ({{ tls_level | default(2) }})
   copy: content={{ tls_level | default(2) }} dest={{ __ftp_conf_root }}/TLS owner=root group=root
 
-- name: Install configured TLS PEM for pure-ftpd
+- name: install configured tls pem for pure-ftpd
   no_log: true
   copy: content="{{ pure_ftpd_pem }}" dest=/etc/ssl/private/pure-ftpd.pem owner=root group=root
   when: pure_ftpd_pem is defined
