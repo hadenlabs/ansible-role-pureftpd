@@ -5,11 +5,11 @@ default_language_version:
 
 repos:
   - repo: https://github.com/pre-commit/pre-commit
-    rev: v2.9.3
+    rev: v2.10.1
     hooks:
       - id: validate_manifest
   - repo: https://github.com/Lucas-C/pre-commit-hooks-safety
-    rev: v1.1.3
+    rev: v1.2.1
     hooks:
       - id: python-safety-dependencies-check
   - repo: https://github.com/Lucas-C/pre-commit-hooks-bandit
@@ -18,30 +18,14 @@ repos:
       - id: python-bandit-vulnerability-check
         args: []
         files: .py$
-  - repo: https://github.com/ansible/ansible-lint.git
-    rev: v5.0.0a0
-    hooks:
-      - id: ansible-lint
-        types: [yaml]
-        exclude: >
-          (?x)^(
-            \.travis\.yml|
-            molecule/.*/\.molecule/.*|
-            molecule/.*/create\.yml
-          )$
-      - id: ansible-lint
-        files: \.travis\.yml
-        args: [-x, ANSIBLE0008]
-      - id: ansible-lint
-        files: molecule/.*/create\.yml
-        args: [-x, ANSIBLE0016]
+
   - repo: https://github.com/pre-commit/mirrors-pylint
     rev: v2.6.0
     hooks:
       - id: pylint
         exclude: __pycache__|migrations|conf.py|_build|.tox|pootle/static|pootle/translations|pootle/locale|pootle/assets|templates
         args:
-          - --rcfile=.pylintrc
+          - --rcfile=.github/linters/.pylintrc
           - --disable=no-name-in-module,import-error,ungrouped-imports
           - --ignore=settings_test, migrations
   - repo: https://github.com/ambv/black
@@ -53,7 +37,7 @@ repos:
     hooks:
       - id: flake8
   - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v0.790
+    rev: v0.812
     hooks:
       - id: mypy
         args:
@@ -95,13 +79,13 @@ repos:
     hooks:
       - id: do_not_commit
   - repo: https://github.com/asottile/blacken-docs
-    rev: v1.9.1
+    rev: v1.9.2
     hooks:
       - id: blacken-docs
         additional_dependencies:
           - black
   - repo: https://github.com/antonbabenko/pre-commit-terraform
-    rev: v1.45.0
+    rev: v1.47.0
     hooks:
       - id: terraform_fmt
       - id: terraform_docs
@@ -125,14 +109,14 @@ repos:
         args:
           - '--write=true'
           - '--list-different'
-          - '--config=prettier.config.js'
-        files: \.(js?(on),ts?(x),scss,md,y?(a)ml,gql,graphql?(s),less,mjml,html)$
-        exclude: lib|node_modules
+          - '--config=.github/linters/prettier.config.js'
+          - '--ignore-path=.github/linters/.prettierignore'
+        exclude: node_modules
       - id: eslint
         name: eslint
         language: system
         pass_filenames: true
-        entry: node_modules/eslint/bin/eslint.js --config=.eslintrc.js --ignore-path=.eslintignore --color
+        entry: node_modules/eslint/bin/eslint.js --config=.github/linters/.eslintrc.js --ignore-path=.github/linters/.eslintignore --color
         args:
           - '--fix'
         files: \.(js|jsx|ts|tsx|mjs|d.ts)$
@@ -140,9 +124,9 @@ repos:
         name: stylint
         language: system
         pass_filenames: true
-        entry: node_modules/stylelint/bin/stylelint.js --config=.stylintrc --syntax less **/*.less
+        entry: node_modules/stylelint/bin/stylelint.js --config=.github/linters/.stylintrc --syntax less **/*.less
         args: [--fix]
-        files: \.(less)$
+        files: \.(css|scss|sass)$
       - id: dockerfile-provides-entrypoint
         name: hadolint
         description: Lint Dockerfiles with hadolint
@@ -150,3 +134,37 @@ repos:
         entry: --entrypoint /bin/hadolint hadolint/hadolint:latest --ignore DL3008 --ignore DL3013 --ignore DL3018 --ignore DL3008 --ignore DL4006 --ignore SC2001 --ignore SC2086 --ignore SC2102 -
         types: [file]
         files: Dockerfile(.*)
+      - id: ansible-lint
+        types: [yaml]
+        description: This hook runs ansible-lint.
+        name: ansible-lint
+        entry: ansible-lint --force-color
+        language: python
+        # do not pass files to ansible-lint, see:
+        # https://github.com/ansible-community/ansible-lint/issues/611
+        pass_filenames: false
+        always_run: true
+        additional_dependencies:
+          # https://github.com/pre-commit/pre-commit/issues/1526
+          # if you want to use only the base ansible version for linting,
+          # replace 'community' extra with 'core' or just mention the exact
+          # version of Ansible you want to install as a dependency.
+          - .[community,yamllint]
+        exclude: >
+          (?x)^(
+            \.travis\.yml|
+            molecule/.*/\.molecule/.*|
+            molecule/.*/create\.yml
+          )$
+      - id: ansible-lint-travis
+        name: ansible-lint-travis
+        language: python
+        entry: ansible-lint --force-color
+        files: \.travis\.yml
+        args: [-x, ANSIBLE0008]
+      - id: ansible-lint
+        name: ansible-lint-molecule
+        language: python
+        entry: ansible-lint --force-color
+        files: molecule/.*/create\.yml
+        args: [-x, ANSIBLE0016]
