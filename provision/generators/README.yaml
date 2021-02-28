@@ -1,0 +1,73 @@
+---
+#
+# This is the canonical configuration for the `README.md`
+# Run `make readme` to rebuild the `README.md`
+#
+
+# Name of this project
+name: ansible-role-pureftpd
+
+company:
+  name: hadenlabs
+  description: |-
+    company labs
+  url: https://hadenlabs.com
+  github: https://github.com/hadenlabs
+  email: support@hadenlabs.com
+
+copyright:
+  name: Hadenlabs
+  url: https://hadenlabs.com
+
+email:
+  support: support@hadenlabs.com
+
+# Logo for this project
+#logo: docs/logo.png
+
+# License of this project
+license: 'MIT'
+
+# Canonical GitHub repo
+github_repo: hadenlabs/ansible-role-pureftpd
+
+# Badges to display
+badges:
+  - name: 'Build Status'
+    image: 'https://travis-ci.org/hadenlabs/ansible-role-pureftpd.svg?branch=main'
+    url: 'https://travis-ci.org/hadenlabs/ansible-role-pureftpd'
+  - name: 'Issues'
+    image: 'https://img.shields.io/github/issues/hadenlabs/ansible-role-pureftpd.svg'
+    url: 'https://github.com/hadenlabs/ansible-role-pureftpd/issues'
+  - name: 'Latest Release'
+    image: 'https://img.shields.io/github/release/hadenlabs/ansible-role-pureftpd.svg'
+    url: 'https://travis-ci.org/hadenlabs/ansible-role-pureftpd/releases'
+
+# Short description of this project
+description: |-
+  Installs Pure-FTPd on Debian/Ubuntu Linux.
+
+  This role installs and configures the latest version of Pure-FTPd from the Pure-FTPd via apt (on Debian-based systems). You will likely need to do extra setup work after this role has installed Pure-FTPd.
+
+requirements: |-
+
+  None.
+
+# How to use this project
+usage: |-
+  ```bash
+  make setup
+  ```
+
+quickstart: null
+
+examples:
+  - 'docs/examples/common.md'
+
+include:
+  - 'docs/include/defaults.md'
+
+# Contributors to this project
+contributors:
+  - name: 'Luis Mayta'
+    github: 'luismayta'

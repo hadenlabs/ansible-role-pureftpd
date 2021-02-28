@@ -24,14 +24,14 @@ docker.run:
 	@if [ -z "${stage}" ]; then \
 		$(docker-dev) run --rm ${service} bash; \
 	else \
-		$(docker-compose) -f ${PATH_DOCKER_COMPOSE}/${stage}.yaml run --rm ${service} bash; \
+		$(docker-compose) -f ${PATH_DOCKER_COMPOSE}/${stage}.yml run --rm ${service} bash; \
 	fi
 
 docker.restart:
 	@if [ -z "${stage}" ]; then \
 		$(docker-dev) restart; \
 	else \
-		$(docker-compose) -f ${PATH_DOCKER_COMPOSE}/${stage}.yaml restart; \
+		$(docker-compose) -f ${PATH_DOCKER_COMPOSE}/${stage}.yml restart; \
 	fi
 
 docker.build:
@@ -41,9 +41,9 @@ docker.build:
 	elif [ -z "${stage}" ] && [ -n "${service}" ]; then \
 		$(docker-dev) build ${service} ${args}; \
 	elif [ -n "${stage}" ] && [ -z "${service}" ]; then \
-		$(docker-compose) -f ${PATH_DOCKER_COMPOSE}/${stage}.yaml build ${args}; \
+		$(docker-compose) -f ${PATH_DOCKER_COMPOSE}/${stage}.yml build ${args}; \
 	elif [ -n "${stage}" ] && [ -n "${service}" ]; then \
-		$(docker-compose) -f ${PATH_DOCKER_COMPOSE}/${stage}.yaml build ${service} ${args}; \
+		$(docker-compose) -f ${PATH_DOCKER_COMPOSE}/${stage}.yml build ${service} ${args}; \
 	fi
 
 docker.log:
@@ -53,9 +53,9 @@ docker.log:
 	elif [ -z "${stage}" ] && [ -n "${service}" ]; then \
 		$(docker-dev) logs -f ${service}; \
 	elif [ -n "${stage}" ] && [ -z "${service}" ]; then \
-		$(docker-compose) -f ${PATH_DOCKER_COMPOSE}/${stage}.yaml logs -f; \
+		$(docker-compose) -f ${PATH_DOCKER_COMPOSE}/${stage}.yml logs -f; \
 	elif [ -n "${stage}" ] && [ -n "${service}" ]; then \
-		$(docker-compose) -f ${PATH_DOCKER_COMPOSE}/${stage}.yaml logs -f ${service} ; \
+		$(docker-compose) -f ${PATH_DOCKER_COMPOSE}/${stage}.yml logs -f ${service} ; \
 	fi
 
 docker.down:
@@ -64,7 +64,7 @@ docker.down:
 		$(docker-dev) down --remove-orphans; \
 		$(docker-test) down --remove-orphans; \
 	else \
-		$(docker-compose) -f ${PATH_DOCKER_COMPOSE}/${stage}.yaml down --remove-orphans; \
+		$(docker-compose) -f ${PATH_DOCKER_COMPOSE}/${stage}.yml down --remove-orphans; \
 	fi
 
 docker.exec:
@@ -72,7 +72,7 @@ docker.exec:
 	@if [ -z "${stage}" ]; then \
 		$(docker-dev) exec ${service} ${command} ; \
 	else \
-		$(docker-compose) -f ${PATH_DOCKER_COMPOSE}/${stage}.yaml exec ${service} ${command} ; \
+		$(docker-compose) -f ${PATH_DOCKER_COMPOSE}/${stage}.yml exec ${service} ${command} ; \
 	fi
 
 docker.stop:
@@ -80,7 +80,7 @@ docker.stop:
 	@if [ "${stage}" == "" ]; then \
 		$(docker-dev) stop; \
 	else \
-		$(docker-compose) -f ${PATH_DOCKER_COMPOSE}/${stage}.yaml stop; \
+		$(docker-compose) -f ${PATH_DOCKER_COMPOSE}/${stage}.yml stop; \
 	fi
 
 docker.verify_network: ## Verify network
@@ -93,7 +93,7 @@ docker.up:
 	@if [ -z "${stage}" ]; then \
 		$(docker-dev) up --remove-orphans; \
 	else \
-		$(docker-compose) -f ${PATH_DOCKER_COMPOSE}/${stage}.yaml up --remove-orphans; \
+		$(docker-compose) -f ${PATH_DOCKER_COMPOSE}/${stage}.yml up --remove-orphans; \
 	fi
 
 docker.list:
@@ -101,5 +101,5 @@ docker.list:
 	@if [ -z "${stage}" ]; then \
 		$(docker-dev) ps; \
 	else \
-		$(docker-compose) -f ${PATH_DOCKER_COMPOSE}/${stage}.yaml ps; \
+		$(docker-compose) -f ${PATH_DOCKER_COMPOSE}/${stage}.yml ps; \
 	fi

@@ -1,5 +1,5 @@
 #
-# See ./CONTRIBUTING.md
+# See ./docs/contributing.md
 #
 .PHONY: utils.help
 
