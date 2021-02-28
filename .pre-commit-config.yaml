@@ -135,16 +135,11 @@ repos:
         types: [file]
         files: Dockerfile(.*)
       - id: ansible-lint
-        types: [yaml]
         files: \.(yml|yaml)$
-        description: This hook runs ansible-lint.
         name: ansible-lint
-        entry: ansible-lint --force-color
+        description: This hook runs ansible-lint.
         language: python
-        # do not pass files to ansible-lint, see:
-        # https://github.com/ansible-community/ansible-lint/issues/611
-        pass_filenames: false
-        always_run: true
+        entry: ansible-lint --force-color
         additional_dependencies:
           # https://github.com/pre-commit/pre-commit/issues/1526
           # if you want to use only the base ansible version for linting,
@@ -155,6 +150,10 @@ repos:
           (?x)^(
             \.travis\.yml|
             molecule/.*/\.molecule/.*|
+            \.pre-commit-config.yaml|
+            docker-compose.yml|
+            mkdocs.yml|
+            provision/*|
             molecule/.*/create\.yml
           )$
       - id: ansible-lint-travis
