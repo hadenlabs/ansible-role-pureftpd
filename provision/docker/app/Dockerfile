@@ -7,15 +7,7 @@ LABEL NAME ansible-role-pureftpd-app-$stage
 ENV USERNAME developer
 
 ENV PACKAGES bash \
-  git \
-  gcc \
-  libc-dev \
-  make \
-  musl-dev \
-  openssl \
-  gcc \
-  libgdal20 \
-  libev-dev
+  openssl
 
 
 COPY Pipfile* /usr/src/
@@ -39,7 +31,7 @@ RUN apt-get update -y \
 
 
 # pipenv
-  && pip3 install pipenv \
+  && pip3 install --no-cache-dir pipenv \
   && pipenv install --dev --skip-lock \
   && pipenv shell --fancy \
 
