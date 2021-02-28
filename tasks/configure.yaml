@@ -1,0 +1,13 @@
+- name: Compile Pure-FTPd configurations.
+  set_fact:
+    pureftpd_config_compiled: '{{ pure_ftpd_config }}'
+
+- name: Write configuration.
+  template:
+    src: config.j2
+    dest: '{{ __ftp_root }}/{{ item.key }}'
+    owner: root
+    group: root
+    mode: '0644'
+  with_dict: '{{ pureftpd_config_compiled }}'
+  notify: restart pure-ftpd
